@@ -60,3 +60,4 @@ build/CMakeFiles/ml_exec.dir/src/mathFun.c.o
 build/CMakeFiles/ml_exec.dir/src/mathFun.c.o.d
 build/CMakeFiles/ml_exec.dir/src/neural.c.o
 build/CMakeFiles/ml_exec.dir/src/neural.c.o.d
+*.csv
