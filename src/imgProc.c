@@ -45,7 +45,7 @@ void processLine(short* pixels, char* line) {
 imagePixels setLayer(int times, FILE* fptr) {
     imagePixels pixels;
     pixels.data = (short*)malloc(sizeof(short)*28*28);
-    pixels.len = 28*28;
+    pixels.len = 28*28+1;
     char* line = getLine(fptr, pixels.len);
     processLine(pixels.data, line);
     //free(line);
@@ -53,7 +53,7 @@ imagePixels setLayer(int times, FILE* fptr) {
 }
 
 imagePixels processCSV(const char* fName) {
-    static int linesProcesssed = 0;
+    static int linesProcesssed = 1;
     imagePixels pixels;
     pixels.data = NULL;
     pixels.len = 0;
@@ -74,4 +74,12 @@ void printPixels(imagePixels* pixels) {
     for(int i = 0; i < pixels->len; i++) {
         printf("%d ", pixels->data[i]);
     }
+}
+
+short getDesiredNumber(imagePixels* pixels) {
+    short current = pixels->data[0];
+    for(size_t i = 1; i < pixels->len; i++) {
+        pixels->data[i-1] = pixels->data[i];
+    }
+    return current;
 }
