@@ -5,6 +5,7 @@ build/Makefile
 build/ml_exec
 build/.cmake/api/v1/query/client-vscode/query.json
 build/.cmake/api/v1/reply/cache-v2-67d44788866d69f0528e.json
+build/.cmake/api/v1/reply/index-2025-07-28T07-08-28-0404.json
 build/.cmake/api/v1/reply/cmakeFiles-v1-03e048ea42532307d425.json
 build/.cmake/api/v1/reply/codemodel-v2-f6e0443095811a80723d.json
 build/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json

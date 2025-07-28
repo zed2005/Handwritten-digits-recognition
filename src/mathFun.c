@@ -15,7 +15,7 @@ float ReLU(short input) {
 float randWeight(signed int min, signed int max) {
     int magicNum = 128;
     int buffMin = min * magicNum; int buffMax = max * magicNum; 
-    signed int randNum = rand()%buffMax;
+    float randNum = rand()%buffMax;
     randNum += buffMin;
     randNum /= 128;
     return randNum*((min+max)/2);

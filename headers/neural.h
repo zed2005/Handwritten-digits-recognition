@@ -7,12 +7,12 @@
 typedef struct Neuron {
     float activation;
     float bias;
-    int weightLen;
+    size_t weightLen;
     short* weights;
 } Neuron;
 
 typedef struct NeuralLayer {
-    int len;
+    size_t len;
     Neuron* neurons;
     struct NeuralLayer* nextLayer;
     struct NeuralLayer* prevLayer;
