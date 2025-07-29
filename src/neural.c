@@ -25,12 +25,18 @@ void setNeuronWeights(NeuralLayer* currentLayer, size_t curIdx, size_t nextWidth
     }
 }
 
-void setLayerActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer, size_t curIdx) {
+void setNeuronActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer, size_t curIdx) {
     float sum = 0;
-    for(size_t j = 0; j < currentLayer->len; j++) {
+    for(size_t j = 0; j < prevLayer->len; j++) {
         sum += prevLayer->neurons[j].weights[curIdx]*prevLayer->neurons[j].activation;
     }
     currentLayer->neurons[curIdx].activation = sigmoid(sum);
+}
+
+void setLayerActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer) {
+    for(size_t i = 0; i < currentLayer->len; i++) {
+        setNeuronActivation(currentLayer, prevLayer, i);
+    }
 }
 
 void setFirstLayerActivation(NeuralLayer* firstLayer, NeuralLayer* nextLayer, const imagePixels* startLayer) {
@@ -46,14 +52,14 @@ void setLayerWeights(NeuralLayer* currentLayer, NeuralLayer* nextLayer) {
 }
 
 
-NeuralLayer* addLayer(NeuralLayer* previousLayer, int width) {
+NeuralLayer* addLayer(NeuralLayer* previousLayer, size_t width) {
     NeuralLayer* newLayer = CreateLayer(width);
     newLayer->prevLayer = previousLayer;
     return newLayer;
 }
 
-NeuralLayer* createLayerStructure(int layers, int width, int outputWidth, const imagePixels* startLayer) {
-    NeuralLayer* first = CreateLayer(startLayer->len);
+NeuralLayer* createLayerStructure(size_t layers, size_t width, size_t outputWidth, size_t startWidth) {
+    NeuralLayer* first = CreateLayer(startWidth);
     NeuralLayer* temp = first;
     for(size_t i = 0; i < 2; i++) {
         temp->nextLayer = addLayer(temp, width);
@@ -64,16 +70,24 @@ NeuralLayer* createLayerStructure(int layers, int width, int outputWidth, const 
 }
 
 void initializeWeights(NeuralLayer* firstLayer) {
-    setLayerWeights(firstLayer, firstLayer->nextLayer);
-    NeuralLayer* iterLayer = firstLayer->nextLayer;
+    NeuralLayer* iterLayer = firstLayer;
     while(iterLayer->nextLayer != NULL) {
         setLayerWeights(iterLayer, iterLayer->nextLayer);
         iterLayer = iterLayer->nextLayer;
     }
 }
 
-NeuralLayer* setupNetwork(int layers, int width, int outputWidth, const imagePixels* startLayer) {
-    NeuralLayer* firstLayer = createLayerStructure(layers, width, outputWidth, startLayer);
+void runNetwork(NeuralLayer* firstLayer, const imagePixels* pixels) {
+    setFirstLayerActivation(firstLayer, firstLayer->nextLayer, pixels);
+    NeuralLayer* iterLayer = firstLayer->nextLayer;
+    while(iterLayer != NULL) {
+        setLayerActivation(iterLayer, iterLayer->prevLayer);
+        iterLayer = iterLayer->nextLayer;
+    }
+}
+
+NeuralLayer* setupNetwork(size_t layers, size_t width, size_t outputWidth, size_t startWidth) {
+    NeuralLayer* firstLayer = createLayerStructure(layers, width, outputWidth, startWidth);
     initializeWeights(firstLayer);
     return firstLayer;
 }
@@ -83,7 +97,7 @@ float calculateCost(NeuralLayer* firstLayer, size_t correctNum) {
     while(finalLayer->nextLayer != NULL) finalLayer = finalLayer->nextLayer;
     float sum = 0;
     for(size_t i = 0; i < finalLayer->len; i++) {
-        if(i == correctNum) sum += ((finalLayer->neurons[i].activation - correctNum)*(finalLayer->neurons[i].activation - correctNum));
+        if(i == correctNum) sum += ((finalLayer->neurons[i].activation - 1)*(finalLayer->neurons[i].activation - 1));
         else sum += finalLayer->neurons[i].activation*finalLayer->neurons[i].activation;
     }
     return sum;

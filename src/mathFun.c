@@ -8,7 +8,7 @@ float sigmoid(float input) {
     return 1/partial;
 }
 
-float ReLU(short input) {
+float ReLU(float input) {
     return fmax(0, input);
 }
 

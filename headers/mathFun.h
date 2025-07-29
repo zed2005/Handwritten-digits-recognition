@@ -7,7 +7,7 @@
     float sigmoid(float input);
     #endif
 
-float ReLU(short input);
+float ReLU(float input);
 
 float randWeight(signed int min, signed int max);
 

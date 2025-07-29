@@ -18,7 +18,9 @@ typedef struct NeuralLayer {
     struct NeuralLayer* prevLayer;
 } NeuralLayer;
 
-NeuralLayer* setupNetwork(int layers, int width, int outputWidth, const imagePixels* startLayer);
+NeuralLayer* setupNetwork(size_t layers, size_t width, size_t outputWidth, size_t startWidth);
+
+void runNetwork(NeuralLayer* firstLayer, const imagePixels* pixels);
 
 float calculateCost(NeuralLayer* finalLayer, size_t correctNum);
 
