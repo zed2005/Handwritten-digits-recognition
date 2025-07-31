@@ -1,8 +1,15 @@
+/**
+ * \file imgProc.c
+ * this is where the file processing functions are defined
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "imgProc.h"
 
+/// @brief skips x lines (x images in this case)
+/// @param fptr pointer to the file
+/// @param destLine number of lines we want to skip
 void lineSkipper(FILE* fptr, int destLine) {
     int c = 0;
     for(int curLines = 0; (c = fgetc(fptr)) != EOF;) {
@@ -11,13 +18,10 @@ void lineSkipper(FILE* fptr, int destLine) {
     }
 }
 
-/*char* getLine(FILE* fptr, signed int len) {
-    char* line = malloc(2*len*sizeof(char)+1);
-    fscanf(fptr, "%[^\n]", line);
-    fgetc(fptr);
-    return line;
-}*/
-
+/// @brief gets characters from a file till the endline character and stores them in a string
+/// @param fptr pointer to the file
+/// @param len length of the line 
+/// @return pointer to the string
 char* getLine(FILE* fptr, int len) {
     char* line = malloc(2 * len + 1);
 
@@ -30,6 +34,9 @@ char* getLine(FILE* fptr, int len) {
     }
 }
 
+/// @brief processes one line, and stores it in an array
+/// @param pixels the array we want to store the numbers in
+/// @param line the line we process
 void processLine(short* pixels, char* line) {
     char* tokens = strtok(line, ",");
     //printf("%s\n", tokens);
@@ -42,7 +49,10 @@ void processLine(short* pixels, char* line) {
     printf("\n");
 }
 
-imagePixels setLayer(int times, FILE* fptr) {
+/// @brief processes a single image and converts it into an array
+/// @param fptr pointer to the file
+/// @return the array of numbers
+imagePixels setLayer(FILE* fptr) {
     imagePixels pixels;
     pixels.data = (short*)malloc(sizeof(short)*28*28);
     pixels.len = 28*28+1;
@@ -64,7 +74,7 @@ imagePixels processCSV(const char* fName) {
         return pixels;
     }
     lineSkipper(fptr, linesProcesssed);
-    pixels = setLayer(linesProcesssed, fptr);
+    pixels = setLayer(fptr);
     linesProcesssed++;
     fclose(fptr);
     return pixels;
