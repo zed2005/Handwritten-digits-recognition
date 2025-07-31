@@ -1,4 +1,4 @@
-#include "neural.h"
+#include "structure.h"
 #include "mathFun.h"
 #include <stdlib.h>
 #include <stdbool.h>
@@ -21,7 +21,7 @@ NeuralLayer* addLayer(NeuralLayer* previousLayer, size_t width) {
 NeuralLayer* createLayerStructure(size_t layers, size_t width, size_t outputWidth, size_t startWidth) {
     NeuralLayer* first = CreateLayer(startWidth);
     NeuralLayer* temp = first;
-    for(size_t i = 0; i < 2; i++) {
+    for(size_t i = 0; i < layers; i++) {
         temp->nextLayer = addLayer(temp, width);
         temp = temp->nextLayer;
     }

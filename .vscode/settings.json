@@ -3,6 +3,7 @@
         ".fantomasignore": "ignore",
         "imgproc.h": "c",
         "math.h": "c",
-        "neural.h": "c"
+        "neural.h": "c",
+        "time.h": "c"
     }
 }

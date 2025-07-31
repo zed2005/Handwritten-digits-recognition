@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "neural.h"
+#include "running.h"
 #include "mathFun.h"
 
 void setNeuronActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer, size_t curIdx) {
