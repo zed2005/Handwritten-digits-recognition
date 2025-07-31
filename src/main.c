@@ -1,3 +1,10 @@
+/**
+ * \file main.c
+ * this is the main file of the half baked neural network
+ * it now sets up a network with random weights, gets one image, and runs the network on it,
+ * then calculates the cost of said image
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "imgProc.h"

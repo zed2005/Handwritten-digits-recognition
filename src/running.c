@@ -1,3 +1,8 @@
+/**
+ * \file running.c
+ * this is where the functions related to the running of the network are defined
+ */
+
 #include <stdlib.h>
 #include "running.h"
 #include "mathFun.h"

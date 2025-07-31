@@ -1,3 +1,8 @@
+/**
+ * \file structure.c
+ * this is where the structural functions are defined
+ */
+
 #include "structure.h"
 #include "mathFun.h"
 #include <stdlib.h>

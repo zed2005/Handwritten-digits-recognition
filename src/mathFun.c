@@ -1,3 +1,8 @@
+/**
+ * \file mathFun.c
+ * this is where the mathematical functions are defined
+ */
+
 #include <math.h>
 #include <stdlib.h>
 #include "mathFun.h"
