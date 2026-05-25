@@ -18,7 +18,7 @@ typedef struct Neuron {
     float activation;
     float bias;
     size_t weightLen;
-    short* weights;
+    float* weights;
 } Neuron;
 
 /// @brief a layer in the network (the whole thing is a doubly linked list)

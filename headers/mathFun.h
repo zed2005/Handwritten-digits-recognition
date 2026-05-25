@@ -24,6 +24,6 @@ float ReLU(float input);
 /// @param min the minimum value we want
 /// @param max the maximum value we want
 /// @return a random float between the two numbers
-float randWeight(signed int min, signed int max);
+float randWeight(float min, float max);
 
 #endif

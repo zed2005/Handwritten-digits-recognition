@@ -54,7 +54,7 @@ void processLine(short* pixels, char* line) {
 /// @return the array of numbers
 imagePixels setLayer(FILE* fptr) {
     imagePixels pixels;
-    pixels.data = (short*)malloc(sizeof(short)*28*28);
+    pixels.data = (short*)malloc(sizeof(short)*28*28+1);
     pixels.len = 28*28+1;
     char* line = getLine(fptr, pixels.len);
     processLine(pixels.data, line);

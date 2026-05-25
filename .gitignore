@@ -1,2 +1,6 @@
 build/
 *.csv
+.vscode/
+__MACOSX/
+mnist_train.csv
+mnist_test.csv

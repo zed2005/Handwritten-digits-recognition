@@ -8,11 +8,11 @@
 #include "mathFun.h"
 
 void setNeuronActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer, size_t curIdx) {
-    float sum = 0;
+    float sum = currentLayer->neurons[curIdx].bias;
     for(size_t j = 0; j < prevLayer->len; j++) {
         sum += prevLayer->neurons[j].weights[curIdx]*prevLayer->neurons[j].activation;
     }
-    currentLayer->neurons[curIdx].activation = sigmoid(sum);
+    currentLayer->neurons[curIdx].activation = ReLU(sum);
 }
 
 void setLayerActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer) {
@@ -23,7 +23,7 @@ void setLayerActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer) {
 
 void setFirstLayerActivation(NeuralLayer* firstLayer, NeuralLayer* nextLayer, const imagePixels* startLayer) {
     for(size_t i = 0; i < startLayer->len; i++) {
-        firstLayer->neurons[i].activation = sigmoid(startLayer->data[i]);
+        firstLayer->neurons[i].activation = ReLU(startLayer->data[i]/255.0f);
     }
 }
 

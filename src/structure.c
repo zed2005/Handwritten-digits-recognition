@@ -36,14 +36,14 @@ NeuralLayer* createLayerStructure(size_t layers, size_t width, size_t outputWidt
 
 void allocWeights(NeuralLayer* currentLayer, size_t nextWidth, size_t curIdx) {
     currentLayer->neurons[curIdx].weightLen = nextWidth;
-    currentLayer->neurons[curIdx].weights = (short*)malloc(nextWidth*sizeof(short));
+    currentLayer->neurons[curIdx].weights = (float*)malloc(nextWidth*sizeof(float));
 }
 
 void setNeuronWeights(NeuralLayer* currentLayer, size_t curIdx, size_t nextWidth) {
     allocWeights(currentLayer, nextWidth, curIdx);
-    currentLayer->neurons[curIdx].bias = randWeight(-4, 4);
+    currentLayer->neurons[curIdx].bias = randWeight(-0.5f, 0.5f);
     for(size_t j = 0; j < nextWidth; j++) {
-        currentLayer->neurons[curIdx].weights[j] = randWeight(-4, 4);
+        currentLayer->neurons[curIdx].weights[j] = randWeight(-0.5f, 0.5f);
     }
 }
 

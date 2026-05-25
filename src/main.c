@@ -16,7 +16,7 @@ int main() {
 
     NeuralLayer* test = setupNetwork(2, 10, 10, 784);
 
-    imagePixels pixels = processCSV("/home/zedded2005/Code/c/ML/mnist_train.csv");
+    imagePixels pixels = processCSV("/home/zedded2005/Code/Handwritten-digits-recognition/mnist_train.csv");
     short desiredNumber = getDesiredNumber(&pixels);
     printPixels(&pixels);
    
