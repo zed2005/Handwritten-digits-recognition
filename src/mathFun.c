@@ -17,7 +17,7 @@ float ReLU(float input) {
     return fmax(0, input);
 }
 
-float dRelU(float input) {
+float dReLU(float input) {
     return input > 0 ? 1 : 0;
 }
 

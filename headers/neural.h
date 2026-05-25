@@ -23,6 +23,7 @@ typedef struct Weight {
 /// @param bias an additional value that helps in fine tunng the network
 /// @param weightLen the lenght of the weight array
 /// @param weights the weights leading from this neuron to the next layer
+/// @param deltaError how much "error" the speciffic neuron has (used for deltaCost calculations)
 typedef struct Neuron {
     float activation;
     float bias;

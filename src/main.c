@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "imgProc.h"
 #include "neural.h"
+#include "learning.h"
 #include "time.h"
 
 int main() {
@@ -20,6 +21,11 @@ int main() {
     short desiredNumber = getDesiredNumber(&pixels);
     //printPixels(&pixels);
    
+    runNetwork(test, &pixels);
+    printf("result : %lf\n", calculateCost(test, desiredNumber));
+    
+    backPropagation(test, desiredNumber);
+    addDeltaToNetwork(test, 0.01);
     runNetwork(test, &pixels);
     printf("result : %lf\n", calculateCost(test, desiredNumber));
 
