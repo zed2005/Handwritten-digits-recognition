@@ -26,7 +26,7 @@ char* getLine(FILE* fptr, int len) {
     char* line = malloc(2 * len + 1);
 
     if (fgets(line, 2 * len + 1, fptr)) {
-        printf("%s\n", line);
+        //printf("%s\n", line);
         return line;
     } else {
         free(line);
@@ -43,10 +43,10 @@ void processLine(short* pixels, char* line) {
     for(int i = 0; tokens; i++) { 
         //printf("%s ", tokens);
         pixels[i] = atoi(tokens); 
-        printf("%d ", pixels[i]);
+        //printf("%d ", pixels[i]);
         tokens = strtok(NULL, ",");
     }
-    printf("\n");
+    //printf("\n");
 }
 
 /// @brief processes a single image and converts it into an array

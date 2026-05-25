@@ -10,7 +10,7 @@
 void setNeuronActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer, size_t curIdx) {
     float sum = currentLayer->neurons[curIdx].bias;
     for(size_t j = 0; j < prevLayer->len; j++) {
-        sum += prevLayer->neurons[j].weights[curIdx]*prevLayer->neurons[j].activation;
+        sum += prevLayer->neurons[j].weights[curIdx].weight*prevLayer->neurons[j].activation;
     }
     currentLayer->neurons[curIdx].activation = ReLU(sum);
 }

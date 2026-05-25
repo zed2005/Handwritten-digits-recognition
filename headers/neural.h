@@ -9,6 +9,15 @@
 #include "imgProc.h"
 #include <stdlib.h>
 
+/// @brief A single weight
+/// @param weight the value of the weight
+/// @param deltaCost how much the Cost changes based on the change of this weight
+typedef struct Weight {
+    float weight;
+    float deltaCost;
+} Weight;
+
+
 /// @brief A single neuron
 /// @param activation How strong is the neuron (between 0 and 1)
 /// @param bias an additional value that helps in fine tunng the network
@@ -17,9 +26,11 @@
 typedef struct Neuron {
     float activation;
     float bias;
+    float deltaError;
     size_t weightLen;
-    float* weights;
+    Weight* weights;
 } Neuron;
+
 
 /// @brief a layer in the network (the whole thing is a doubly linked list)
 /// @param len how mani neurons does the layer have
@@ -32,6 +43,7 @@ typedef struct NeuralLayer {
     struct NeuralLayer* nextLayer;
     struct NeuralLayer* prevLayer;
 } NeuralLayer;
+
 
 /// @brief function for making a network
 /// @param layers how mani layers it has (excluding first and last)

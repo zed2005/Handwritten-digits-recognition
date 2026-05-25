@@ -18,7 +18,7 @@ int main() {
 
     imagePixels pixels = processCSV("/home/zedded2005/Code/Handwritten-digits-recognition/mnist_train.csv");
     short desiredNumber = getDesiredNumber(&pixels);
-    printPixels(&pixels);
+    //printPixels(&pixels);
    
     runNetwork(test, &pixels);
     printf("result : %lf\n", calculateCost(test, desiredNumber));

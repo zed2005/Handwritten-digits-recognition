@@ -17,6 +17,10 @@ float ReLU(float input) {
     return fmax(0, input);
 }
 
+float dRelU(float input) {
+    return input > 0 ? 1 : 0;
+}
+
 float randWeight(float min, float max) {
     float scale = rand() / (float) RAND_MAX; 
     return min + scale * ( max - min ); 

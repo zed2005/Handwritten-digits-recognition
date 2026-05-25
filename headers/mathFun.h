@@ -17,8 +17,13 @@
 
 /// @brief ReLu function
 /// @param input the function input
-/// @return a number between -inf and +inf: max(0, input)
+/// @return a number between 0 and +inf: max(0, input)
 float ReLU(float input);
+
+/// @brief ReLu function derivative
+/// @param input the function input
+/// @return 0 or 1
+float dReLU(float input);
 
 /// @brief random weight generator
 /// @param min the minimum value we want
