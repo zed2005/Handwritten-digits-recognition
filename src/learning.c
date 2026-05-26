@@ -7,6 +7,8 @@
 #include "neural.h"
 #include "mathFun.h"
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 float calculateSum(NeuralLayer* currentLayer, size_t currentNeuronIdx) {
     float sum = currentLayer->neurons[currentNeuronIdx].bias;
@@ -26,47 +28,63 @@ float calculateDeltaError(NeuralLayer* currentLayer, size_t currentNeuronIdx) {
     float delta = 0;
 
     for(size_t i = 0; i < currentLayer->nextLayer->len; i++) {
-        delta += currentLayer->nextLayer->neurons[i].weights[currentNeuronIdx].deltaCost;
+        float w = currentLayer->neurons[currentNeuronIdx].weights[i].weight;
+        float nextError = currentLayer->nextLayer->neurons[i].deltaError;
+        delta += w * nextError;
     }
 
-    delta *= dReLU(calculateSum(currentLayer, currentNeuronIdx));
+    float act = currentLayer->neurons[currentNeuronIdx].activation;
+    delta *= (act > 0) ? 1.0f : 0.0f;
 
     return delta;
 }
 
 float calculateLastLayerDeltaError(NeuralLayer* currentLayer, size_t currentNeuronIdx, float epsilon) {
-    return -2 * epsilon * dReLU(calculateSum(currentLayer, currentNeuronIdx));
+    float act = currentLayer->neurons[currentNeuronIdx].activation;
+    float sigmoidDerivative = act * (1.0f - act);
+    return -2.0f * epsilon * sigmoidDerivative;
 }
+
 
 void calculateNeuronWeights(NeuralLayer* currentLayer, size_t currentNeuronIdx) {
     for(size_t i = 0; i < currentLayer->prevLayer->len; i++) {
         float act = currentLayer->prevLayer->neurons[i].activation;
         float error = currentLayer->neurons[currentNeuronIdx].deltaError;
         
-        currentLayer->prevLayer->neurons[i].weights[currentNeuronIdx].deltaCost = act * error;
+        currentLayer->prevLayer->neurons[i].weights[currentNeuronIdx].deltaCost += act * error;
     } 
+}
+
+void calculateLayerWeights(NeuralLayer* currentLayer) {
+    NeuralLayer* prev = currentLayer->prevLayer;
+
+    if (prev == NULL) return;
+    for(size_t i = 0; i < prev->len; i++) {
+        for(size_t j = 0; j < currentLayer->len; j++) {
+            float act = prev->neurons[i].activation;
+            float err = currentLayer->neurons[j].deltaError;
+            prev->neurons[i].weights[j].deltaCost += act * err;
+        }
+    }
 }
 
 void calculateLastLayer(NeuralLayer* lastLayer, short desiredNumber) {
     for(size_t i = 0; i < lastLayer->len; i++) {
         short d = desiredNumber == i ? 1 : 0;
         lastLayer->neurons[i].deltaError = calculateLastLayerDeltaError(lastLayer, i, d - lastLayer->neurons[i].activation);
-        calculateNeuronWeights(lastLayer->prevLayer, i);
+        
+        lastLayer->neurons[i].deltaBias += lastLayer->neurons[i].deltaError; 
     }
+    calculateLayerWeights(lastLayer);
 }
 
 void calculateLayer(NeuralLayer* currentLayer) {
-    NeuralLayer* prev = currentLayer->prevLayer;
-    if (prev == NULL) return;
-
-    for(size_t i = 0; i < prev->len; i++) {
-        for(size_t j = 0; j < currentLayer->len; j++) {
-            float act = prev->neurons[i].activation;
-            float err = currentLayer->neurons[j].deltaError;
-            
-            prev->neurons[i].weights[j].deltaCost = act * err;
-        }
+    for(size_t i = 0; i < currentLayer->len; i++) {
+        currentLayer->neurons[i].deltaError = calculateDeltaError(currentLayer, i);
+        
+        currentLayer->neurons[i].deltaBias += currentLayer->neurons[i].deltaError;
     }
+    calculateLayerWeights(currentLayer);
 }
 
 void backPropagation(NeuralLayer* firstLayer, short desiredNumber) {
@@ -83,8 +101,8 @@ void backPropagation(NeuralLayer* firstLayer, short desiredNumber) {
 }
 
 void addBiasToNeuron(NeuralLayer* currentLayer, size_t currentNeuronIdx, float learningRate) {
-    currentLayer->neurons[currentNeuronIdx].bias -= learningRate * currentLayer->neurons[currentNeuronIdx].deltaError;
-    currentLayer->neurons[currentNeuronIdx].deltaError = 0;
+    currentLayer->neurons[currentNeuronIdx].bias -= learningRate * currentLayer->neurons[currentNeuronIdx].deltaBias;
+    currentLayer->neurons[currentNeuronIdx].deltaBias = 0;
 }
 
 void addDeltaToNeuron(NeuralLayer* currentLayer, size_t currentNeuronIdx, float learningRate) {
@@ -110,4 +128,60 @@ void addDeltaToNetwork(NeuralLayer* firstLayer, float learningRate) {
     }
 
     for(size_t i = 0; i < iter->len; i++) addBiasToNeuron(iter, i, learningRate);
+}
+
+void batching(NeuralLayer* network, size_t batchCount, size_t batchSize) {
+    FILE* fptr = fopen("/home/zedded2005/Code/Handwritten-digits-recognition/mnist_train.csv", "r");
+    if(fptr == NULL) { printf("Error while opening file!\n"); return; }
+
+    for(size_t b = 0; b < batchCount; b++) {
+        for(size_t i = 0; i < batchSize; i++) {
+            imagePixels pixels = setLayer(fptr); 
+            short desiredNumber = getDesiredNumber(&pixels);
+
+            runNetwork(network, &pixels);
+            backPropagation(network, desiredNumber);
+            free(pixels.data);
+        }
+
+        addDeltaToNetwork(network, 0.05f / batchSize);
+        printf("Batch %d done.\n", (int)b);
+    }
+    
+    fclose(fptr);
+}
+
+int getBestActivation(NeuralLayer* fLayer) {
+    while(fLayer->nextLayer != NULL) fLayer = fLayer->nextLayer;
+
+    int maxIdx = 0;
+    float max = fLayer->neurons[0].activation;
+
+    for(size_t i = 0; i < fLayer->len; i++) {
+        if(fLayer->neurons[i].activation > max) {
+            max = fLayer->neurons[i].activation;
+            maxIdx = i; 
+        }
+    }
+
+    return maxIdx;
+}
+
+void testing(NeuralLayer* network) {
+    int correct = 0;
+
+    for(size_t i = 0; i < 1000; i++) {
+        imagePixels pixels = processCSV("/home/zedded2005/Code/Handwritten-digits-recognition/mnist_train.csv");
+        short desiredNumber = getDesiredNumber(&pixels);
+
+        runNetwork(network, &pixels);
+        int guessed = getBestActivation(network);
+        printf("Result: %lf, Guess: %d, Correct: %d\n", calculateCost(network, desiredNumber), guessed, desiredNumber);
+        
+        if(guessed == desiredNumber) correct++;
+
+        free(pixels.data);
+    }
+
+    printf("Accuracy: %lf\n", (float)correct/1000);
 }

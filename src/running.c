@@ -12,7 +12,12 @@ void setNeuronActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer, size
     for(size_t j = 0; j < prevLayer->len; j++) {
         sum += prevLayer->neurons[j].weights[curIdx].weight*prevLayer->neurons[j].activation;
     }
-    currentLayer->neurons[curIdx].activation = ReLU(sum);
+    
+    if (currentLayer->nextLayer == NULL) {
+        currentLayer->neurons[curIdx].activation = sigmoid(sum);
+    } else {
+        currentLayer->neurons[curIdx].activation = ReLU(sum);
+    }
 }
 
 void setLayerActivation(NeuralLayer* currentLayer, NeuralLayer* prevLayer) {

@@ -41,14 +41,15 @@ void allocWeights(NeuralLayer* currentLayer, size_t nextWidth, size_t curIdx) {
 }
 
 void setWeight(NeuralLayer* currentlayer, size_t currentNeuronIdx, size_t currentWeightIdx) {
-    currentlayer->neurons[currentNeuronIdx].weights[currentWeightIdx].weight = randWeight(-0.5, 0.5);
+    currentlayer->neurons[currentNeuronIdx].weights[currentWeightIdx].weight = randWeight(-0.05f, 0.05f);
     currentlayer->neurons[currentNeuronIdx].weights[currentWeightIdx].deltaCost = 0;
 }
 
 void setNeuronWeights(NeuralLayer* currentLayer, size_t curIdx, size_t nextWidth) {
     allocWeights(currentLayer, nextWidth, curIdx);
-    currentLayer->neurons[curIdx].bias = randWeight(-0.5f, 0.5f);
+    currentLayer->neurons[curIdx].bias = randWeight(-0.05f, 0.05f);
     currentLayer->neurons[curIdx].deltaError = 0;
+    currentLayer->neurons[curIdx].deltaBias = 0;
     for(size_t j = 0; j < nextWidth; j++) {
         setWeight(currentLayer, curIdx, j);
     }

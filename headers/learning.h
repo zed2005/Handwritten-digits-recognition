@@ -7,6 +7,7 @@
 #define LEARNING_H
 
 #include "neural.h"
+#include <stdio.h>
 
 /// @brief calculates the sum of the neuron before squishing (sum(wijk*y(i-1)k))
 /// @param currentLayer the current layer the neuron is in
@@ -34,11 +35,6 @@ float calculateDeltaError(NeuralLayer* currentLayer, size_t currentNeuronIdx);
 /// @return the deltaError of the specified neuron
 float calculateLastLayerDeltaError(NeuralLayer* currentLayer, size_t currentNeuronIdx, float epsilon);
 
-/// @brief Calculates deltaCost for every weight of a neuron
-/// @param currentLayer the current layer the neuron is in
-/// @param currentNeuronIdx the neuron whichs weights we are adjusting
-void calculateNeuronWeights(NeuralLayer* currentLayer, size_t currentNeuronIdx);
-
 /// @brief sets deltaCost and deltaError for the last layer
 /// @param lastLayer the last layer of the network
 void calculateLastLayer(NeuralLayer* lastLayer, short desiredNumber);
@@ -63,5 +59,9 @@ void addDeltaToLayer(NeuralLayer* currentLayer, float learningRate);
 /// @brief adds the deltas to all neurons and weights in the network
 /// @param firstLayer the first layer of the network
 void addDeltaToNetwork(NeuralLayer* firstLayer, float learningRate);
+
+void batching(NeuralLayer* network, size_t batchCount, size_t batchSize);
+
+void testing(NeuralLayer* network);
 
 #endif

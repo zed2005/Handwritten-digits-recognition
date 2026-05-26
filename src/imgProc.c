@@ -91,5 +91,6 @@ short getDesiredNumber(imagePixels* pixels) {
     for(size_t i = 1; i < pixels->len; i++) {
         pixels->data[i-1] = pixels->data[i];
     }
+    pixels->len--;
     return current;
 }

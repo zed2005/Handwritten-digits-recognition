@@ -27,6 +27,7 @@ typedef struct Weight {
 typedef struct Neuron {
     float activation;
     float bias;
+    float deltaBias;
     float deltaError;
     size_t weightLen;
     Weight* weights;

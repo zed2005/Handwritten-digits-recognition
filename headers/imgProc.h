@@ -6,6 +6,8 @@
 #ifndef IMGPROC_H
 #define IMGPROC_H
 
+#include <stdio.h>
+
 /// @brief this is the output array
 /// @param len the length of the array
 /// @param data the actual array 
@@ -27,5 +29,10 @@ void printPixels(imagePixels* pixels);
 /// @param pixels the processed file details
 /// @return the first element (in training images its the actual number)
 short getDesiredNumber(imagePixels* pixels);
+
+/// @brief processes a single image and converts it into an array
+/// @param fptr pointer to the file
+/// @return the array of numbers
+imagePixels setLayer(FILE* fptr);
 
 #endif
